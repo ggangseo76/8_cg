@@ -24,6 +24,9 @@
     <ClCompile Include="src\glad.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="stb.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h">
@@ -32,8 +35,8 @@
     <ClInclude Include="src\shader.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
-    <ClInclude Include="..\Graphics_P\G_test\opengl.h">
-      <Filter>소스 파일</Filter>
+    <ClInclude Include="src\opengl.h">
+      <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,8 @@
 #include<fstream>
 #include<iostream>
 #include<cerrno>
+#include "shader.h"
+#include "camera.h"
 
 // ─────────────────────────────────────────────
 // Vertex
@@ -84,6 +86,7 @@ public:
 // ─────────────────────────────────────────────
 // Shader
 // ─────────────────────────────────────────────
+/*
 class Shader
 {
 public:
@@ -123,7 +126,7 @@ public:
 	void Activate() { glUseProgram(ID); }
 	void Delete()   { glDeleteProgram(ID); }
 };
-
+*/
 // ─────────────────────────────────────────────
 // Texture
 // ─────────────────────────────────────────────
@@ -158,7 +161,7 @@ public:
 	}
 	void texUnit(Shader& shader, const char* uniform, GLuint u)
 	{
-		shader.Activate();
+		shader.use();
 		glUniform1i(glGetUniformLocation(shader.ID, uniform), u);
 	}
 	void Bind()   { glActiveTexture(GL_TEXTURE0 + unit); glBindTexture(GL_TEXTURE_2D, ID); }
@@ -169,6 +172,7 @@ public:
 // ─────────────────────────────────────────────
 // Camera
 // ─────────────────────────────────────────────
+/*
 class Camera
 {
 public:
@@ -223,10 +227,11 @@ public:
 		}
 	}
 };
-
+*/
 // ─────────────────────────────────────────────
 // Mesh
 // ─────────────────────────────────────────────
+
 class Mesh
 {
 public:
@@ -249,23 +254,29 @@ public:
 
 	void Draw(Shader& shader, Camera& camera)
 	{
-		shader.Activate();
+		shader.use();
 		VAO.Bind();
 
-		// 텍스처 바인딩 및 유니폼 설정
+		// 1. 기존 텍스처 바인딩 로직은 그대로 유지
 		for (unsigned int i = 0; i < textures.size(); i++)
 		{
-			std::string n = std::to_string(i); // 유니폼 이름을 diffuse0, diffuse1 등으로 통일
+			std::string n = std::to_string(i);
 			textures[i].texUnit(shader, ("diffuse" + n).c_str(), i);
 			textures[i].Bind();
 		}
 
-		// 조명과 카메라 정보 전달
+		// 2. 카메라 및 조명 정보 전달
 		glUniform4f(glGetUniformLocation(shader.ID, "lightColor"), 1.0f, 1.0f, 1.0f, 1.0f);
 		glUniform3f(glGetUniformLocation(shader.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
-		camera.Matrix(shader, "camMatrix");
 
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		VAO.Unbind(); // 안전한 해제
+		// 3. [핵심 수정] Matrix() 대신 GetViewMatrix()를 사용하고 setMat4로 전달
+		// 셰이더에서 사용하는 uniform 이름이 "camMatrix"라면 그대로 사용하세요.
+		glm::mat4 view = camera.GetViewMatrix();
+
+		// Shader 클래스에 setMat4가 있다면 사용, 없다면 아래의 glUniformMatrix4fv 사용
+		shader.setMat4("camMatrix", view);
+
+		glDrawElements(GL_TRIANGLES, static_cast<unsigned int>(indices.size()), GL_UNSIGNED_INT, 0);
+		VAO.Unbind();
 	}
 };
