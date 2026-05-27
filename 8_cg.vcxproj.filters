@@ -32,6 +32,9 @@
     <ClInclude Include="src\shader.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="..\Graphics_P\G_test\opengl.h">
+      <Filter>소스 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic.frag">

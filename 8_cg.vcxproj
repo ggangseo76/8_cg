@@ -24,6 +24,7 @@
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Graphics_P\G_test\opengl.h" />
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\shader.h" />
   </ItemGroup>

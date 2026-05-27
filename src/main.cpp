@@ -1,9 +1,11 @@
+#include "opengl.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <iostream>
 
 #include "Camera.h"
 #include "shader.h"
+
 
 // ==========================================
 // [1. 전역 변수 및 설정]
