@@ -20,6 +20,7 @@ const float YAW = -90.0f; // 초기 좌우 시선 (y축 기준 회전)
 const float PITCH = 0.0f;  // 초기 상하 시선 (x축 기준 회전)
 const float SPEED = 2.5f;  // 이동 속도
 const float SENSITIVITY = 0.1f;  // 마우스 민감도
+const float ZOOM = 45.0f;   // 기본 시야각 (도)
 
 class Camera {
 public:
@@ -37,6 +38,7 @@ public:
     // 카메라 옵션
     float MovementSpeed;
     float MouseSensitivity;
+    float Zoom;   // 현재 시야각 (FOV)
 
     // 생성자 (위치값만 받아 초기화)
     Camera(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f));
@@ -49,6 +51,8 @@ public:
 
     // 마우스 입력을 처리하여 시선(Yaw, Pitch) 변경
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
+    // 마우스 스크롤 입력을 처리하여 시야각(Zoom) 변경
+    void ProcessMouseScroll(float yoffset);
 
 private:
     // Yaw, Pitch 각도를 바탕으로 Front, Right, Up 벡터를 다시 계산하는 함수

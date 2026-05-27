@@ -2,7 +2,8 @@
 
 // 생성자 구현
 Camera::Camera(glm::vec3 position)
-    : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY)
+    : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
+    MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
     Position = position;
     WorldUp = glm::vec3(0.0f, 1.0f, 0.0f); // 보통 월드의 하늘은 항상 y축(0,1,0)
@@ -56,6 +57,13 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constr
 
     // 각도가 변했으니 벡터들을 다시 계산
     updateCameraVectors();
+}
+
+// 마우스 스크롤 처리 - 시야각 변경 (망원경 줌 효과)
+void Camera::ProcessMouseScroll(float yoffset) {
+    Zoom -= yoffset;
+    if (Zoom < 1.0f)   Zoom = 1.0f;      // 너무 좁아지지 않게
+    if (Zoom > 45.0f)  Zoom = 45.0f;     // 기본값보다 넓어지지 않게
 }
 
 // 삼각함수(cos, sin)를 이용해 3D 시선의 방향 벡터 계산
