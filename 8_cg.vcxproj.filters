@@ -52,5 +52,8 @@
     <None Include="shaders\room.vert">
       <Filter>소스 파일</Filter>
     </None>
+    <None Include=".gitignore">
+      <Filter>소스 파일</Filter>
+    </None>
   </ItemGroup>
 </Project>
