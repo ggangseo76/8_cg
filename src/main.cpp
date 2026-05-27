@@ -1,3 +1,5 @@
+#define GLM_ENABLE_EXPERIMENTAL
+
 #include <filesystem>
 namespace fs = std::filesystem;
 #include "opengl.h"
