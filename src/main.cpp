@@ -6,6 +6,7 @@
 #include "shader.h"
 #include "Room.h"
 #include "Staircase.h"
+#include "InfoPanel.h"
 
 // ==========================================
 // [1. 전역 변수 및 설정]
@@ -144,6 +145,7 @@ int main() {
     Shader roomShader("shaders/room.vert", "shaders/room.frag");    // ⭐ 추가: Room 전용
     Room room(40.0f, 12.0f, 11.0f);    // width=30(가로 길게), depth=12, height=8
     Staircase stairs;
+    InfoPanel infoPanel(-7.0f, 3.0f, 2.0f);   // x=-7, z=0, 안내방 평지(y=2.0) 위
 
     unsigned int floorVAO, floorVBO;
     glGenVertexArrays(1, &floorVAO);
@@ -184,6 +186,7 @@ int main() {
         roomShader.setVec3("viewPos", camera.Position);
         room.Draw(roomShader);
         stairs.Draw(roomShader);   // ⭐ 계단도 같은 셰이더로 그림
+        infoPanel.Draw(roomShader);
 
         // ===== 임시 바닥 (격자) 그리기 =====
         // 통합 시 제거 예정
