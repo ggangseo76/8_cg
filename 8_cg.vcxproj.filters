@@ -27,6 +27,9 @@
     <ClCompile Include="src\Room.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\Staircase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h">
@@ -36,6 +39,9 @@
       <Filter>소스 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\Room.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Staircase.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

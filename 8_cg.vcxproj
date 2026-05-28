@@ -23,11 +23,13 @@
     <ClCompile Include="src\glad.c" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Room.cpp" />
+    <ClCompile Include="src\Staircase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
     <ClInclude Include="src\Room.h" />
     <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\Staircase.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
