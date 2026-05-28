@@ -21,6 +21,7 @@ const float PITCH = 0.0f;  // 초기 상하 시선 (x축 기준 회전)
 const float SPEED = 2.5f;  // 이동 속도
 const float SENSITIVITY = 0.1f;  // 마우스 민감도
 const float ZOOM = 45.0f;   // 기본 시야각 (도)
+const float EYE_HEIGHT = 1.5f;  // 바닥에서 눈까지 높이
 
 class Camera {
 public:
@@ -53,6 +54,8 @@ public:
     void ProcessMouseMovement(float xoffset, float yoffset, GLboolean constrainPitch = true);
     // 마우스 스크롤 입력을 처리하여 시야각(Zoom) 변경
     void ProcessMouseScroll(float yoffset);
+    // 바닥 높이에 맞춰 카메라 y를 고정 (계단 오르내리기)
+    void StickToFloor(float floorHeight);
 
 private:
     // Yaw, Pitch 각도를 바탕으로 Front, Right, Up 벡터를 다시 계산하는 함수
