@@ -8,10 +8,22 @@
 const float PI = 3.14159265359f;
 
 PlanetariumDome::PlanetariumDome(float centerX, float centerZ, float radius, float height) {
+    this->centerX = centerX;   
+    this->centerZ = centerZ;   
+    this->radius = radius;    
+    this->height = height;    
+    
     // 바닥과 우주 텍스처를 각각 따로 로드합니다.
     floorTextureID = loadTexture("textures/floor.jpg");
     spaceTextureID = loadTexture("textures/wall.png");
     setupDome(centerX, centerZ, radius, height);
+}
+
+bool PlanetariumDome::Contains(float x, float z, float margin) const {
+    float dx = x - centerX;
+    float dz = z - centerZ;
+    float r = radius - margin;
+    return (dx * dx + dz * dz) <= (r * r);
 }
 
 PlanetariumDome::~PlanetariumDome() {
@@ -130,6 +142,8 @@ unsigned int PlanetariumDome::loadTexture(const char* path) {
     stbi_image_free(data);
     return textureID;
 }
+
+
 
 void PlanetariumDome::Draw(Shader& shader) {
     shader.use();

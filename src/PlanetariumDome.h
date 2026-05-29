@@ -10,6 +10,7 @@ public:
     PlanetariumDome(float centerX, float centerZ, float radius, float height);
     ~PlanetariumDome();
 
+    bool Contains(float x, float z, float margin) const;
     void Draw(Shader& shader);
 
 private:
@@ -18,6 +19,7 @@ private:
     unsigned int spaceTextureID;
     int vertexCount; // 동적으로 생성된 정점 개수
 
+    float centerX, centerZ, radius, height;
     unsigned int loadTexture(const char* path);
     void setupDome(float cx, float cz, float r, float h);
 };

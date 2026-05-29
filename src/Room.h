@@ -12,7 +12,8 @@ class Room {
 public:
     Room(float width, float depth, float height);
     ~Room();
-
+    // (x,z)가 방 안인지 검사. margin만큼 벽에서 떨어진 안쪽 영역만 true.
+    bool Contains(float x, float z, float margin) const;
     void Draw(Shader& shader);
 
 private:

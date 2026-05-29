@@ -21,7 +21,9 @@ public:
     // 생성자:
     //   posX, posZ : 안내판을 놓을 가로/세로 위치
     //   floorY     : 안내판이 서는 바닥 높이 (안내방 평지면 2.0)
-    InfoPanel(float posX, float posZ, float floorY);
+    InfoPanel(float posX, float posZ, float floorY,
+        const char* infoTexturePath = "textures/florrguide.jpg",
+        float facingYaw = 0.0f);
     ~InfoPanel();
 
     void Draw(Shader& shader);

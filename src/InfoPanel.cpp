@@ -68,7 +68,8 @@ static float quadVertices[] = {
 // ==========================================
 // 생성자: 받침대 + 패널의 변환 행렬 계산
 // ==========================================
-InfoPanel::InfoPanel(float posX, float posZ, float floorY) {
+InfoPanel::InfoPanel(float posX, float posZ, float floorY,
+    const char* infoTexturePath, float facingYaw) {
     setupCube();
     baseTexture  = loadTexture("textures/panel2.jpg");   // 받침대: 벽 텍스처(회색 느낌)
     panelTexture = loadTexture("textures/panel2.jpg");  // 패널
@@ -82,6 +83,7 @@ InfoPanel::InfoPanel(float posX, float posZ, float floorY) {
         glm::mat4 m = glm::mat4(1.0f);
         // 안내판 위치로 이동 (바닥 floorY 위에 세움)
         m = glm::translate(m, glm::vec3(posX, floorY, posZ));
+        m = glm::rotate(m, glm::radians(facingYaw), glm::vec3(0, 1, 0));
         m = glm::scale(m, glm::vec3(baseW, baseH, baseD));
         baseModel = m;
     }
@@ -97,13 +99,14 @@ InfoPanel::InfoPanel(float posX, float posZ, float floorY) {
         // 1) 받침대 꼭대기 근처로 이동
         m = glm::translate(m, glm::vec3(posX, floorY + baseH, posZ));
         // 2) X축으로 기울임 (앞면이 위를 보도록 비스듬히)
+        m = glm::rotate(m, glm::radians(facingYaw), glm::vec3(0.0f, 1.0f, 0.0f));
         m = glm::rotate(m, glm::radians(tilt), glm::vec3(1.0f, 0.0f, 0.0f));
         // 3) 패널 크기로 늘림 (얇은 판)
         m = glm::scale(m, glm::vec3(panelW, panelLen, panelThick));
         panelModel = m;
 
         setupQuad();
-        infoTexture = loadTexture("textures/Callisto.jpg");  // 임시, 나중에 목성정보로 교체
+        infoTexture = loadTexture(infoTexturePath);
 
         // 정보판 quad: 패널과 같은 위치·각도, 앞면에 살짝 띄워 얹음
         {
@@ -111,6 +114,8 @@ InfoPanel::InfoPanel(float posX, float posZ, float floorY) {
 
             // 1. 패널과 동일한 기준점(힌지)으로 이동
             m = glm::translate(m, glm::vec3(posX, floorY + baseH, posZ));
+
+            m = glm::rotate(m, glm::radians(facingYaw), glm::vec3(0.0f, 1.0f, 0.0f));
 
             // 2. 패널과 똑같이 X축으로 기울임 (이제 로컬 축도 함께 기울어짐)
             m = glm::rotate(m, glm::radians(tilt), glm::vec3(1.0f, 0.0f, 0.0f));

@@ -8,12 +8,13 @@
 #include "Staircase.h"
 #include "InfoPanel.h"
 #include "PlanetariumDome.h"
+#include "JupiterSystem.h"
 
 // ==========================================
 // [1. 전역 변수 및 설정]
 // ==========================================
-// 카메라 객체 (초기 위치 z = 3.0f)
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+// 카메라 객체 초기 위치
+Camera camera(glm::vec3(-12.0f, 3.5f, 0.0f));
 
 // 프레임 시간 계산용 변수
 float deltaTime = 0.0f;
@@ -150,7 +151,15 @@ int main() {
     // 원형 플라네타륨 방 생성 (중심 X=65, Z=0, 반지름 25, 천장 20)
     PlanetariumDome dome(44.33f, 0.0f, 25.0f, 20.0f);
 
-    InfoPanel infoPanel(-7.0f, 3.0f, 2.0f);   // x=-7, z=0, 안내방 평지(y=2.0) 위
+    InfoPanel infoPanel(-7.0f, 3.0f, 2.0f);
+
+    InfoPanel jupiterPanel(24.0f, 0.0f, 0.0f, "textures/jupiterInfo.jpg", 90.0f);
+    InfoPanel ioPanel(59.9f, 15.6f, 0.0f, "textures/ioInfo.jpg", -135.0f);
+    InfoPanel europaPanel(28.8f, 15.6f, 0.0f, "textures/europaInfo.jpg", 135.0f);
+    InfoPanel callistoPanel(28.8f, -15.6f, 0.0f, "textures/CallistoInfo.jpg", 45.0f);
+    InfoPanel ganymedePanel(59.9f, -15.6f, 0.0f, "textures/ganymedeInfo.jpg", -45.0f);
+
+
 
     unsigned int floorVAO, floorVBO;
     glGenVertexArrays(1, &floorVAO);
@@ -163,14 +172,31 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
+    // 걸을 수 있는 영역 = 방 안 또는 돔 안
+    auto isWalkable = [&](float x, float z) {
+        const float MARGIN = 0.5f;
+        return room.Contains(x, z, MARGIN) || dome.Contains(x, z, MARGIN);
+        };
+
+    // 목성 생성
+    JupiterSystem jupiterSys;
+
     // 6. 렌더 루프
     while (!glfwWindowShouldClose(window)) {
         float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
 
+        glm::vec3 oldPos = camera.Position;
         processInput(window);
-        // ⭐ 카메라가 선 자리의 바닥 높이를 구해서 y를 거기 맞춤
+
+        // ⭐ 벽 충돌: 축을 분리해서 검사 (벽 따라 미끄러짐)
+        glm::vec3 p = camera.Position;
+        if (!isWalkable(p.x, oldPos.z)) p.x = oldPos.x;   // x 막히면 x만 취소
+        if (!isWalkable(p.x, p.z))      p.z = oldPos.z;   // z 막히면 z만 취소
+        camera.Position.x = p.x;
+        camera.Position.z = p.z;
+
         float floorH = stairs.GetFloorHeightAt(camera.Position.x, camera.Position.z);
         camera.StickToFloor(floorH);
 
@@ -178,34 +204,42 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // 공통 행렬 계산
-        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
-            800.0f / 600.0f, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), 800.0f / 600.0f, 0.1f, 100.0f);
         glm::mat4 view = camera.GetViewMatrix();
 
-        // ===== Room 그리기 =====
+        // ===== 1. Room과 돔(공간) 그리기 =====
         roomShader.use();
         roomShader.setMat4("projection", projection);
         roomShader.setMat4("view", view);
         roomShader.setVec3("lightPos", glm::vec3(65.0f, 15.0f, 0.0f));      // 천장 중앙 광원
         roomShader.setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));    // 흰빛
         roomShader.setVec3("viewPos", camera.Position);
+        
         room.Draw(roomShader);
-        stairs.Draw(roomShader);   // ⭐ 계단도 같은 셰이더로 그림
+        stairs.Draw(roomShader);
         dome.Draw(roomShader);
+
         infoPanel.Draw(roomShader);
 
-        // ===== 임시 바닥 (격자) 그리기 =====
-        // 통합 시 제거 예정
+        jupiterPanel.Draw(roomShader);
+        ioPanel.Draw(roomShader);
+        europaPanel.Draw(roomShader);
+        callistoPanel.Draw(roomShader);
+        ganymedePanel.Draw(roomShader);
+
+        // ===== 2. 목성계 그리기 =====
+        float time = static_cast<float>(glfwGetTime());
         
-        //ourShader.use();
+        // ⭐ 목성 전용 셰이더(ourShader) 활성화 및 카메라 정보 전달 (순서가 매우 중요!)
+        ourShader.use(); 
         ourShader.setMat4("projection", projection);
         ourShader.setMat4("view", view);
-        glm::mat4 model = glm::mat4(1.0f);
-        ourShader.setMat4("model", model);
+        // (조명 모델 행렬 등은 JupiterSystem.cpp 안에서 알아서 처리됩니다)
 
-        //glBindVertexArray(floorVAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 6);
+        // 좌표 수정
+        jupiterSys.Draw(ourShader, camera, time, glm::vec3(44.33f, 5.0f, 0.0f));
 
+        // 버퍼 교체 및 이벤트 처리
         glfwSwapBuffers(window);
         glfwPollEvents();
     }

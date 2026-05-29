@@ -108,6 +108,13 @@ Room::~Room() {
     }
 }
 
+bool Room::Contains(float x, float z, float margin) const {
+    float halfW = width / 2.0f;   // 20
+    float halfD = depth / 2.0f;   // 6
+    // 오른쪽(+X) 면은 통로(벽 제거)라 margin을 주지 않는다 → 돔으로 넘어갈 수 있게
+    return (x >= -halfW + margin) && (x <= halfW)
+        && (z >= -halfD + margin) && (z <= halfD - margin);
+}
 
 // ==========================================
 // setupFace: 한 면의 VAO/VBO 생성
