@@ -21,15 +21,32 @@
   <ItemGroup>
     <ClCompile Include="src\Camera.cpp" />
     <ClCompile Include="src\glad.c" />
+    <ClCompile Include="src\InfoPanel.cpp" />
+    <ClCompile Include="src\JupiterSystem.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PlanetariumDome.cpp" />
+    <ClCompile Include="src\Room.cpp" />
+    <ClCompile Include="src\Staircase.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h" />
+    <ClInclude Include="src\InfoPanel.h" />
+    <ClInclude Include="src\JupiterSystem.h" />
+    <ClInclude Include="src\PlanetariumDome.h" />
+    <ClInclude Include="src\Room.h" />
     <ClInclude Include="src\shader.h" />
+    <ClInclude Include="src\Staircase.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="shaders\basic.frag" />
     <None Include="shaders\basic.vert" />
+    <None Include="shaders\jupiter.frag" />
+    <None Include="shaders\jupiter.vert" />
+    <None Include="shaders\room.frag" />
+    <None Include="shaders\room.vert" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -2,7 +2,8 @@
 
 // 생성자 구현
 Camera::Camera(glm::vec3 position)
-    : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED), MouseSensitivity(SENSITIVITY)
+    : Front(glm::vec3(0.0f, 0.0f, -1.0f)), MovementSpeed(SPEED),
+    MouseSensitivity(SENSITIVITY), Zoom(ZOOM)
 {
     Position = position;
     WorldUp = glm::vec3(0.0f, 1.0f, 0.0f); // 보통 월드의 하늘은 항상 y축(0,1,0)
@@ -58,6 +59,13 @@ void Camera::ProcessMouseMovement(float xoffset, float yoffset, GLboolean constr
     updateCameraVectors();
 }
 
+// 마우스 스크롤 처리 - 시야각 변경 (망원경 줌 효과)
+void Camera::ProcessMouseScroll(float yoffset) {
+    Zoom -= yoffset;
+    if (Zoom < 1.0f)   Zoom = 1.0f;      // 너무 좁아지지 않게
+    if (Zoom > 45.0f)  Zoom = 45.0f;     // 기본값보다 넓어지지 않게
+}
+
 // 삼각함수(cos, sin)를 이용해 3D 시선의 방향 벡터 계산
 void Camera::updateCameraVectors() {
     glm::vec3 front;
@@ -74,4 +82,11 @@ void Camera::updateCameraVectors() {
 
     // Right와 Front를 외적하여 진정한 Up 벡터 도출
     Up = glm::normalize(glm::cross(Right, Front));
+}
+
+// 바닥 높이에 맞춰 카메라의 y(높이)를 고정
+// - floorHeight: 지금 내 (x,z) 자리의 바닥 높이 (Staircase가 알려줌)
+// - 거기에 눈높이(EYE_HEIGHT)를 더한 값으로 y를 강제 설정
+void Camera::StickToFloor(float floorHeight) {
+    Position.y = floorHeight + EYE_HEIGHT;
 }

@@ -42,12 +42,12 @@ public:
         const char* vShaderCode = vertexCode.c_str();
         const char* fShaderCode = fragmentCode.c_str();
 
-        // 2. 쉐이더 컴파일 및 에러 체크 변수
+        // 2. 셰이더 컴파일 및 에러 체크 변수
         unsigned int vertex, fragment;
         int success;
         char infoLog[512];
 
-        // 버텍스 쉐이더
+        // 버텍스 셰이더
         vertex = glCreateShader(GL_VERTEX_SHADER);
         glShaderSource(vertex, 1, &vShaderCode, NULL);
         glCompileShader(vertex);
@@ -58,7 +58,7 @@ public:
             std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
         }
 
-        // 프래그먼트 쉐이더
+        // 프래그먼트 셰이더
         fragment = glCreateShader(GL_FRAGMENT_SHADER);
         glShaderSource(fragment, 1, &fShaderCode, NULL);
         glCompileShader(fragment);
@@ -69,7 +69,7 @@ public:
             std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
         }
 
-        // 쉐이더 프로그램 링크
+        // 셰이더 프로그램 링크
         ID = glCreateProgram();
         glAttachShader(ID, vertex);
         glAttachShader(ID, fragment);
@@ -86,8 +86,26 @@ public:
     }
 
     void use() { glUseProgram(ID); }
+
+    // ===== Setter 함수들 =====
     void setMat4(const std::string& name, const glm::mat4& mat) const {
         glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
+    }
+
+    void setVec3(const std::string& name, const glm::vec3& value) const {
+        glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, glm::value_ptr(value));
+    }
+
+    void setVec3(const std::string& name, float x, float y, float z) const {
+        glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
+    }
+
+    void setInt(const std::string& name, int value) const {
+        glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    }
+
+    void setFloat(const std::string& name, float value) const {
+        glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
     }
 };
 

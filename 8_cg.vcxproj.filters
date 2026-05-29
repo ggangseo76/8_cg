@@ -24,6 +24,21 @@
     <ClCompile Include="src\glad.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\Room.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Staircase.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\InfoPanel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\PlanetariumDome.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="src\JupiterSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Camera.h">
@@ -32,12 +47,42 @@
     <ClInclude Include="src\shader.h">
       <Filter>소스 파일</Filter>
     </ClInclude>
+    <ClInclude Include="src\Room.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Staircase.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\InfoPanel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PlanetariumDome.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\JupiterSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\basic.frag">
       <Filter>소스 파일</Filter>
     </None>
     <None Include="shaders\basic.vert">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="shaders\room.frag">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="shaders\room.vert">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include=".gitignore">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="shaders\jupiter.frag">
+      <Filter>소스 파일</Filter>
+    </None>
+    <None Include="shaders\jupiter.vert">
       <Filter>소스 파일</Filter>
     </None>
   </ItemGroup>
