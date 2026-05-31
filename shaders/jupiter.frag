@@ -1,23 +1,45 @@
 #version 330 core
-in vec2 TexCoord;
-in vec3 Normal;
-in vec3 FragPos;
 
 out vec4 FragColor;
 
-uniform sampler2D diffuse0;
-uniform vec3  lightDir;        // 빛이 "진행하는" 방향
-uniform vec3  lightColor;
-uniform float ambientStrength; // 어두운 면이 완전히 까매지지 않게
+// Vertex Shader에서 넘어온 값
+in vec3 FragPos;
+in vec3 Normal;
+in vec2 TexCoord;
 
-void main() {
-    vec3 tex = texture(diffuse0, TexCoord).rgb;
+// 텍스처
+uniform sampler2D texture1;
 
-    vec3 N = normalize(Normal);
-    vec3 L = normalize(-lightDir);     // 빛을 향하는 방향
-    float diff = max(dot(N, L), 0.0);
+// 목성계 조명
+uniform vec3 lightDir;
+uniform vec3 lightColor;
+uniform float ambientStrength;
+uniform float emissiveStrength;
 
-    vec3 ambient = ambientStrength * lightColor;
-    vec3 diffuse = diff * lightColor;
-    FragColor = vec4((ambient + diffuse) * tex, 1.0);
+void main()
+{
+    vec3 objectColor = texture(texture1, TexCoord).rgb;
+    vec3 norm = normalize(Normal);
+
+    // 전체적으로 너무 어둡지 않게 하는 기본광
+    vec3 ambient = ambientStrength * objectColor;
+
+    // 방향성 조명
+    vec3 dir = normalize(-lightDir);
+    float diff = max(dot(norm, dir), 0.0);
+    vec3 diffuse = diff * lightColor * objectColor;
+
+    // 자체 발광 느낌
+    // 실제 광원처럼 빛을 내는 건 아니지만, 어두운 배경 속에서 전시물이 살아 보이게 함
+    vec3 emissive = emissiveStrength * objectColor;
+
+    vec3 result = ambient + diffuse + emissive;
+
+    // 살짝 밝게 보정
+    result = result * 1.08;
+
+    // 과노출 방지
+    result = clamp(result, 0.0, 1.0);
+
+    FragColor = vec4(result, 1.0);
 }
